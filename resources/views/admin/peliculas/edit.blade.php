@@ -144,7 +144,7 @@
                                                        id="imagen" 
                                                        name="imagen" 
                                                        accept="image/*">
-                                                <small class="form-text text-muted">Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 10MB. Deja este campo vacío si no quieres cambiar la imagen actual.</small>
+                                                <small class="form-text text-white">Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 10MB. Deja este campo vacío si no quieres cambiar la imagen actual.</small>
                                                 @error('imagen')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror

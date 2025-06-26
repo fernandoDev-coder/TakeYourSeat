@@ -154,17 +154,14 @@ class ReservaController extends Controller
     private function generarCodigoEntrada()
     {
         do {
-            // Generar 4 números aleatorios
             $numeros = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
             
-            // Generar 4 letras aleatorias (excluyendo caracteres ambiguos)
             $letras = '';
-            $caracteresPermitidos = 'ABCDEFGHJKLMNPQRSTUVWXYZ'; // Excluimos I, O para evitar confusión
+            $caracteresPermitidos = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
             for ($i = 0; $i < 4; $i++) {
                 $letras .= $caracteresPermitidos[rand(0, strlen($caracteresPermitidos) - 1)];
             }
             
-            // Combinar números y letras
             $codigo = $numeros . $letras;
             
             // Verificar si el código ya existe
@@ -212,6 +209,7 @@ class ReservaController extends Controller
             'sala' => $reserva->horario->sala,
             'asientos' => $reserva->asientos,
             'hora' => $reserva->horario->hora,
+            
             'fecha' => $reserva->horario->fecha
         ];
 

@@ -91,7 +91,7 @@
             background-color: rgba(255, 255, 255, 0.05);
             color: var(--text-light);
             text-decoration: none;
-            min-width: 130px;
+            width: 160px;
         }
 
         .nav-buttons .btn-auth:hover {
@@ -206,9 +206,15 @@
         </div>
         <div class="nav-buttons">
             @if(Auth::check())
-                <a href="{{ route('home') }}" class="btn-auth">
+                <a href="{{ route('usuario.perfil') }}" class="btn-auth">
                     <i class="fas fa-user"></i> Mi Cuenta
                 </a>
+                <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="btn-auth" style="margin-left: 10px;">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                    </button>
+                </form>
             @else
                 <a href="{{ route('login') }}" class="btn-auth">
                     <i class="fas fa-sign-in-alt"></i> Login / Registro

@@ -321,6 +321,8 @@
             border-top: 1px solid var(--border-color);
             padding: 1rem 0;
             margin-top: auto;
+            color: var(--text-gray);
+            font-size: 0.9rem;
         }
 
         @media (max-width: 768px) {
@@ -615,15 +617,18 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Custom Confirm Dialog -->
-    <script src="{{ asset('js/app.js') }}"></script>
-
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @stack('scripts')
 
     <!-- Overlay para cerrar el menú -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <footer class="footer mt-auto py-3">
+        <div class="container text-center">
+            <p class="mb-0">&copy; {{ date('Y') }} TakeYourSeat. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
     <script>
         // Control de la barra lateral en móviles

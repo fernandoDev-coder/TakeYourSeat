@@ -40,9 +40,9 @@
                 <div class="col-md-3">
                     <select name="clasificacion" class="form-select bg-dark text-white" id="clasificacionSelect">
                         <option value="todas">Todas las clasificaciones</option>
-                        @foreach(['G', 'PG', 'PG-13', 'R', 'NC-17'] as $clasificacion)
-                            <option value="{{ $clasificacion }}" {{ request('clasificacion') == $clasificacion ? 'selected' : '' }}>
-                                {{ $clasificacion }}
+                        @foreach(['G' => 'Público General', 'PG' => 'Guía Parental', 'PG-13' => 'Guía Parental Estricta', 'R' => 'Restringido', 'NC-17' => 'Solo Adultos'] as $clasificacionValue => $clasificacionDescription)
+                            <option value="{{ $clasificacionValue }}" {{ request('clasificacion') == $clasificacionValue ? 'selected' : '' }}>
+                                {{ $clasificacionValue }} ({{ $clasificacionDescription }})
                             </option>
                         @endforeach
                     </select>

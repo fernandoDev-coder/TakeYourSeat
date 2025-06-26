@@ -79,7 +79,6 @@
                              class="accordion-collapse collapse" 
                              aria-labelledby="heading{{ $pelicula->id }}" 
                              data-bs-parent="#acordeonPeliculas">
-                            <div class="accordion-body">
                                 @if($pelicula->horarios->isEmpty())
                                     <div class="text-center py-3">
                                         <p class="text-muted mb-3">No hay horarios programados para esta película.</p>
@@ -111,22 +110,21 @@
                                                 @foreach($pelicula->horarios as $horario)
                                                     <tr>
                                                         <td>{{ \Carbon\Carbon::parse($horario->fecha)->format('d/m/Y') }}</td>
-                                                        <td>{{ $horario->hora }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($horario->hora)->format('H:i') }}</td>
                                                         <td>{{ $horario->sala }}</td>
                                                         <td>
                                                             <div class="btn-group">
                                                                 <a href="{{ route('admin.horarios.edit', $horario->id) }}" 
-                                                                   class="btn btn-warning btn-sm">
+                                                                   class="btn btn-sm btn-warning">
                                                                     <i class="fas fa-edit"></i>
                                                                 </a>
                                                                 <form action="{{ route('admin.horarios.destroy', $horario->id) }}" 
                                                                       method="POST" 
-                                                                      class="d-inline">
+                                                                      class="d-inline"
+                                                                      onsubmit="return confirm('¿Estás seguro de que deseas eliminar este horario?');">
                                                                     @csrf
                                                                     @method('DELETE')
-                                                                    <button type="submit" 
-                                                                            class="btn btn-danger btn-sm"
-                                                                            onclick="return confirm('¿Estás seguro de que deseas eliminar este horario?')">
+                                                                    <button type="submit" class="btn btn-sm btn-danger">
                                                                         <i class="fas fa-trash"></i>
                                                                     </button>
                                                                 </form>
@@ -138,7 +136,6 @@
                                         </table>
                                     </div>
                                 @endif
-                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -210,18 +207,21 @@ main {
     padding-right: 0;
 }
 
-.accordion-button:not(.collapsed) {
-    background-color: var(--background-dark) !important;
-    color: white !important;
-}
-
-.accordion-button::after {
-    filter: invert(1);
-}
-
 .accordion-button:focus {
     box-shadow: none;
     border-color: rgba(255, 255, 255, 0.125);
+}
+
+.accordion-button.collapsed::after {
+    transform: rotate(-90deg);
+}
+
+.accordion-button:not(.collapsed)::after {
+    transform: rotate(0deg);
+}
+
+.accordion-collapse {
+    transition: all 0.3s ease-in-out;
 }
 
 .table-dark {

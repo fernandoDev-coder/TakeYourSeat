@@ -13,6 +13,7 @@ class Pelicula extends Model {
         'imagen',
         'duracion',
         'clasificacion',
+        'activa',
         'trailer_url',
         'director',
         'reparto',
@@ -21,6 +22,7 @@ class Pelicula extends Model {
 
     protected $casts = [
         'fecha_estreno' => 'date',
+        'activa' => 'boolean',
     ];
 
     public function horarios() {
@@ -31,4 +33,3 @@ class Pelicula extends Model {
         return $this->belongsToMany(Genero::class);
     }
 }
-

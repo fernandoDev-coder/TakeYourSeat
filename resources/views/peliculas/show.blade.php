@@ -16,7 +16,12 @@
         </div>
 
         <div class="movie-info">
-            <h1 class="movie-title">{{ $pelicula->titulo }}</h1>
+            <h1 class="movie-title">
+                {{ $pelicula->titulo }}
+                @if(!$pelicula->activa)
+                    <span class="badge bg-secondary ms-2">Deshabilitada</span>
+                @endif
+            </h1>
             
             <div class="movie-meta">
                 <span class="duration">

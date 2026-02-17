@@ -101,8 +101,10 @@
     @else
         <div class="movies-grid">
             @foreach($peliculas as $pelicula)
-                <div class="movie-card">
-                    <a href="{{ route('peliculas.show', $pelicula->id) }}" class="movie-poster-link">
+                <div class="movie-card {{ !$pelicula->activa ? 'movie-card--disabled' : '' }}">
+                    <a href="{{ $pelicula->activa ? route('peliculas.show', $pelicula->id) : 'javascript:void(0)' }}"
+                       class="movie-poster-link {{ !$pelicula->activa ? 'disabled' : '' }}"
+                       @if(!$pelicula->activa) aria-disabled="true" tabindex="-1" @endif>
                         <div class="movie-poster">
                             @if($pelicula->imagen)
                                 <img src="{{ asset($pelicula->imagen) }}" 
@@ -114,14 +116,23 @@
                                 </div>
                             @endif
                             <div class="movie-overlay">
-                                <span class="btn btn-primary btn-sm">
-                                    <i class="fas fa-info-circle"></i> Más información
+                                <span class="btn {{ $pelicula->activa ? 'btn-primary' : 'btn-secondary' }} btn-sm {{ !$pelicula->activa ? 'disabled' : '' }}">
+                                    @if($pelicula->activa)
+                                        <i class="fas fa-info-circle"></i> Más información
+                                    @else
+                                        <i class="fas fa-ban"></i> No disponible
+                                    @endif
                                 </span>
                             </div>
                         </div>
                     </a>
                     <div class="movie-info">
-                        <h3 class="movie-title">{{ $pelicula->titulo }}</h3>
+                        <h3 class="movie-title">
+                            {{ $pelicula->titulo }}
+                            @if(!$pelicula->activa)
+                                <span class="badge bg-secondary ms-2">Deshabilitada</span>
+                            @endif
+                        </h3>
                         <div class="movie-meta">
                             <span class="duration" title="Duración">
                                 <i class="fas fa-clock"></i> 
@@ -147,22 +158,44 @@
                         <div class="movie-actions">
                             @auth
                                 @if(auth()->user()->is_admin)
-                                    <form action="{{ route('admin.peliculas.destroy', $pelicula->id) }}" 
-                                        method="POST" 
-                                        class="d-inline"
-                                        onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta película?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash"></i> Eliminado rápido
-                                        </button>
-                                    </form>
+                                    @if($pelicula->activa)
+                                        <form action="{{ route('admin.peliculas.destroy', $pelicula->id) }}" 
+                                            method="POST" 
+                                            class="d-inline"
+                                            onsubmit="return confirm('¿Estás seguro de que deseas deshabilitar esta película?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-ban"></i> Deshabilitar
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('admin.peliculas.habilitar', $pelicula->id) }}"
+                                            method="POST"
+                                            class="d-inline"
+                                            onsubmit="return confirm('¿Deseas rehabilitar esta película?')">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="btn btn-success btn-sm">
+                                                <i class="fas fa-undo"></i> Rehabilitar
+                                            </button>
+                                        </form>
+                                    @endif
                                 @else
-                                    <a href="{{ route('reservas.create', $pelicula->id) }}" 
-                                       class="btn btn-primary d-inline-flex align-items-center justify-content-center">
-                                        <i class="fas fa-ticket-alt"></i>
-                                        <span>Reservar</span>
-                                    </a>
+                                    @if($pelicula->activa)
+                                        <a href="{{ route('reservas.create', $pelicula->id) }}" 
+                                           class="btn btn-primary d-inline-flex align-items-center justify-content-center">
+                                            <i class="fas fa-ticket-alt"></i>
+                                            <span>Reservar</span>
+                                        </a>
+                                    @else
+                                        <button type="button"
+                                                class="btn btn-secondary d-inline-flex align-items-center justify-content-center"
+                                                disabled>
+                                            <i class="fas fa-ban"></i>
+                                            <span>No disponible</span>
+                                        </button>
+                                    @endif
                                 @endif
                             @endauth
                         </div>
@@ -238,6 +271,14 @@
     overflow: hidden;
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.movie-card--disabled {
+    opacity: 0.75;
+}
+
+.movie-card--disabled .movie-poster-link {
+    cursor: not-allowed;
 }
 
 .movie-card:hover {
@@ -571,12 +612,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Actualizar automáticamente al cambiar la clasificación
+    // Actualizar autom?ticamente al cambiar la clasificaci?n
     document.getElementById('clasificacionSelect').addEventListener('change', function() {
         this.form.submit();
     });
 
-    // Actualizar automáticamente al cambiar el género
+    // Actualizar autom?ticamente al cambiar el g?nero
     document.getElementById('generoSelect').addEventListener('change', function() {
         this.form.submit();
     });
@@ -585,7 +626,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function removeGenre(generoId) {
     const select = document.getElementById('generosSelect');
     
-    // Deseleccionar el género específico
+    // Deseleccionar el g?nero específico
     Array.from(select.options).forEach(option => {
         if (option.value === generoId) {
             option.selected = false;

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 use App\Models\Pelicula;
 use App\Models\Genero;
 
@@ -11,9 +12,10 @@ class PeliculaSeeder extends Seeder
     public function run()
     {
         // Desactiva restricciones de llaves foráneas y limpia la tabla
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        Schema::disableForeignKeyConstraints();
+        DB::table('genero_pelicula')->truncate();
         DB::table('peliculas')->truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');        
+        Schema::enableForeignKeyConstraints();
 
         $peliculas = [
             [

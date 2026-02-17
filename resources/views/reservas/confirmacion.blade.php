@@ -6,7 +6,7 @@
         <div class="success-icon">
             <i class="fas fa-check-circle"></i>
         </div>
-        <h1>¡Reserva Confirmada!</h1>
+        <h1>?Reserva Confirmada!</h1>
         <p class="text-gray">Tu reserva se ha realizado con éxito</p>
     </div>
 
@@ -256,12 +256,4 @@
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const qr = qrcode(0, 'M');
-    qr.addData('{{ $reserva->codigo }}');
-    qr.make();
-    document.getElementById('qrcode').innerHTML = qr.createImgTag(5);
-});
-</script>
 @endsection 

@@ -16,7 +16,7 @@ class PeliculaController extends Controller
 
     public function index()
     {
-        $peliculas = Pelicula::orderBy('titulo', 'asc')->paginate(10);
+        $peliculas = Pelicula::with('generos')->orderBy('titulo', 'asc')->paginate(10);
         return view('admin.peliculas.index', compact('peliculas'));
     }
 
@@ -110,26 +110,30 @@ class PeliculaController extends Controller
 
     public function destroy(Pelicula $pelicula)
     {
-        // Eliminar la imagen asociada
-        if ($pelicula->imagen) {
-            $imagePath = str_replace('/storage/', '', $pelicula->imagen);
-            Storage::disk('public')->delete($imagePath);
-        }
-
-        $pelicula->delete();
+        $pelicula->activa = false;
+        $pelicula->save();
 
         // Redirigir según el origen de la petición
         if (request()->is('peliculas*')) {
             return redirect()
                 ->route('peliculas.index')
-                ->with('success', 'Película eliminada correctamente');
+                ->with('success', 'Película deshabilitada correctamente');
         }
 
         return redirect()
             ->route('admin.peliculas.index')
-            ->with('success', 'Película eliminada correctamente');
+            ->with('success', 'Película deshabilitada correctamente');
     }
 
+    public function habilitar(Pelicula $pelicula)
+    {
+        $pelicula->activa = true;
+        $pelicula->save();
+
+        return redirect()
+            ->route('admin.peliculas.index')
+            ->with('success', 'Película rehabilitada correctamente');
+    }
     public function generarHorarios($id)
     {
         $pelicula = Pelicula::findOrFail($id);
@@ -139,3 +143,4 @@ class PeliculaController extends Controller
             ->with('info', 'Selecciona los horarios para la película ' . $pelicula->titulo);
     }
 } 
+

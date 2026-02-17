@@ -140,6 +140,12 @@ composer install
 npm install
 ```
 
+> Nota (Windows / PowerShell): si `npm` falla con “la ejecución de scripts está deshabilitada”, ejecuta:
+> - `cmd /c npm install`
+> - y para arreglar vulnerabilidades: `cmd /c npm audit fix`
+> 
+> Alternativa: habilita scripts solo para tu usuario con `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` y vuelve a abrir la terminal.
+
 3. Configurar el entorno:
 ```bash
 cp .env.example .env

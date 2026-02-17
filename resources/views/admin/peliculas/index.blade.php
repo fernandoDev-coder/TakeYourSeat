@@ -103,6 +103,7 @@
                                     <th>Géneros</th>
                                     <th>Clasificación</th>
                                     <th>Duración</th>
+                                    <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -117,6 +118,13 @@
                                         </td>
                                         <td>{{ $pelicula->duracion }} min</td>
                                         <td>
+                                            @if($pelicula->activa)
+                                                <span class="badge bg-success">Activa</span>
+                                            @else
+                                                <span class="badge bg-secondary">Deshabilitada</span>
+                                            @endif
+                                        </td>
+                                        <td>
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('peliculas.show', $pelicula->id) }}" 
                                                    class="btn btn-info btn-sm" 
@@ -128,24 +136,39 @@
                                                    title="Editar">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <form action="{{ route('admin.peliculas.destroy', $pelicula->id) }}" 
-                                                      method="POST" 
-                                                      class="d-inline"
-                                                      onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta película?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" 
-                                                            class="btn btn-danger btn-sm"
-                                                            title="Eliminar">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
+                                                @if($pelicula->activa)
+                                                    <form action="{{ route('admin.peliculas.destroy', $pelicula->id) }}" 
+                                                          method="POST" 
+                                                          class="d-inline"
+                                                          onsubmit="return confirm('¿Estás seguro de que deseas deshabilitar esta película?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" 
+                                                                class="btn btn-danger btn-sm"
+                                                                title="Deshabilitar">
+                                                            <i class="fas fa-ban"></i>
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    <form action="{{ route('admin.peliculas.habilitar', $pelicula->id) }}"
+                                                          method="POST"
+                                                          class="d-inline"
+                                                          onsubmit="return confirm('¿Deseas rehabilitar esta película?')">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit"
+                                                                class="btn btn-success btn-sm"
+                                                                title="Rehabilitar">
+                                                            <i class="fas fa-undo"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center">
+                                        <td colspan="7" class="text-center">
                                             <div class="empty-state">
                                                 <i class="fas fa-film fa-3x mb-3"></i>
                                                 <p>No hay películas registradas</p>

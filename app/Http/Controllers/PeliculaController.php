@@ -142,7 +142,7 @@ class PeliculaController extends Controller
             }
 
             return redirect()->route('peliculas.index')
-                ->with('success', '¡Película "' . $pelicula->titulo . '" agregada correctamente!');
+                ->with('success', '¡Película \"' . $pelicula->titulo . '\" agregada correctamente!');
         } catch (\Exception $e) {
             \Log::error('Error al crear película: ' . $e->getMessage());
             return redirect()
@@ -162,6 +162,12 @@ class PeliculaController extends Controller
                   ->orderBy('fecha', 'asc')
                   ->orderBy('hora', 'asc');
         }])->findOrFail($id);
+
+        if (!$pelicula->activa && !(auth()->check() && auth()->user()->is_admin)) {
+            return redirect()
+                ->route('peliculas.index')
+                ->with('error', 'Esta película está deshabilitada y no está disponible para reservas.');
+        }
 
         return view('peliculas.show', compact('pelicula'));
     }
@@ -203,18 +209,12 @@ class PeliculaController extends Controller
     public function destroy($id)
     {
         $pelicula = Pelicula::findOrFail($id);
-        
-        // Eliminar la imagen si existe
-        if ($pelicula->imagen) {
-            $rutaImagen = str_replace('storage/', 'public/', $pelicula->imagen);
-            Storage::delete($rutaImagen);
-        }
-        
-        $pelicula->delete();
+        $pelicula->activa = false;
+        $pelicula->save();
 
         return redirect()
             ->route('peliculas.index')
-            ->with('success', 'Película eliminada correctamente.');
+            ->with('success', 'Película deshabilitada correctamente.');
     }
 
     public function adminIndex()

@@ -51,7 +51,7 @@
                     </a>
                 @endif
                 <a href="{{ route('register') }}">
-                    ¿No tienes cuenta? Regístrate
+                    ?No tienes cuenta? Regístrate
                 </a>
             </div>
         </form>

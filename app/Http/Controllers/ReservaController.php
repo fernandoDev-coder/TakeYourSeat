@@ -37,6 +37,12 @@ class ReservaController extends Controller
 
     public function create(Pelicula $pelicula)
     {
+        if (!$pelicula->activa) {
+            return redirect()
+                ->route('peliculas.index')
+                ->with('error', 'Esta película está deshabilitada y no está disponible para reservas.');
+        }
+
         $horarios = $pelicula->horarios()
             ->where('fecha', '>=', now()->format('Y-m-d'))
             ->orderBy('fecha')
@@ -49,6 +55,13 @@ class ReservaController extends Controller
     public function createDesdeHorario(Horario $horario)
     {
         $pelicula = $horario->pelicula;
+
+        if (!$pelicula || !$pelicula->activa) {
+            return redirect()
+                ->route('peliculas.index')
+                ->with('error', 'Esta película está deshabilitada y no está disponible para reservas.');
+        }
+
         $horarios = collect([$horario]);
 
         return view('reservas.create', compact('pelicula', 'horarios'));
@@ -62,6 +75,14 @@ class ReservaController extends Controller
         ]);
 
         $horario = Horario::findOrFail($request->horario_id);
+        $pelicula = $horario->pelicula;
+
+        if (!$pelicula || !$pelicula->activa) {
+            return redirect()
+                ->route('peliculas.index')
+                ->with('error', 'Esta película está deshabilitada y no está disponible para reservas.');
+        }
+
         $asientosSeleccionados = explode(',', $request->asientos);
         $cantidadAsientos = count($asientosSeleccionados);
         

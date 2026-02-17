@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Storage;
                 <div class="text-center empty-state">
                     <i class="fas fa-film fa-3x mb-3"></i>
                     <h3>No tienes reservas</h3>
-                    <p>¡Explora nuestra cartelera y reserva tus entradas!</p>
+                    <p>?Explora nuestra cartelera y reserva tus entradas!</p>
                     <a href="{{ route('peliculas.index') }}" class="btn btn-primary">
                         <i class="fas fa-film"></i> Ver Cartelera
                     </a>

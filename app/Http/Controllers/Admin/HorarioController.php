@@ -81,7 +81,9 @@ class HorarioController extends Controller
             'precio' => 'required|numeric|min:0'
         ]);
 
-        $horario->update($request->all());
+        $data = $request->all();
+        $data['sala'] = 'Sala ' . $data['sala'];
+        $horario->update($data);
 
         return redirect()->route('admin.horarios.index')
             ->with('success', 'Horario actualizado correctamente');

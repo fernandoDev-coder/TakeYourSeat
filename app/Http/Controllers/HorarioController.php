@@ -81,6 +81,12 @@ class HorarioController extends Controller
     {
         $pelicula = Pelicula::with('horarios')->findOrFail($id);
 
+        if (!$pelicula->activa && !(auth()->check() && auth()->user()->is_admin)) {
+            return redirect()
+                ->route('peliculas.index')
+                ->with('error', 'Esta película está deshabilitada y no está disponible para reservas.');
+        }
+
         // Si no hay horarios en la BD, generar 5 aleatorios solo para visualizar (no guardar)
         if ($pelicula->horarios->isEmpty()) {
             $horariosAleatorios = collect();

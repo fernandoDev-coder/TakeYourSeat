@@ -40,6 +40,10 @@ Route::middleware(['auth'])->group(function () {
 // Rutas de administración
 Route::prefix('admin')->name('admin.')->middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+
+    // Re-enable movies (no hard delete)
+    Route::patch('peliculas/{pelicula}/habilitar', [App\Http\Controllers\Admin\PeliculaController::class, 'habilitar'])
+        ->name('peliculas.habilitar');
     
     // Rutas para películas
     Route::resource('peliculas', App\Http\Controllers\Admin\PeliculaController::class);

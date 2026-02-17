@@ -2,6 +2,10 @@ import './bootstrap';
 
 // Función para generar códigos QR
 export function generateQR(data, elementId, size = 5) {
+    if (typeof qrcode !== 'function') {
+        return;
+    }
+
     const qr = qrcode(0, 'M');
     qr.addData(data);
     qr.make();
@@ -26,9 +30,11 @@ export function updateSeatsSelection(asientos, selectedSeatsElement, totalPriceE
 document.addEventListener('DOMContentLoaded', () => {
     // Inicializar tooltips de Bootstrap si existen
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
+    if (typeof bootstrap !== 'undefined' && bootstrap?.Tooltip) {
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    }
 
     // Inicializar selección de asientos si estamos en la página de reservas
     const asientos = document.querySelectorAll('.seat-checkbox');
